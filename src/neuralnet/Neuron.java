@@ -1,0 +1,35 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package neuralnet;
+
+import java.util.ArrayList;
+
+/**
+ *
+ * @author Sean Vogel
+ */
+public class Neuron {
+    /**
+     * Links to neurons in next layer
+     */
+    public ArrayList<Link> forward;
+    
+    /**
+     * Links to neurons in previous layer
+     */
+    public ArrayList<Link> backward;
+    
+    /**
+     * Constructor
+     */
+    public Neuron() {
+        forward = new ArrayList<>();
+        backward = new ArrayList<>();
+    }
+    
+   // public double getWeight() { return weight; }
+    //public void setWeight(double w) { weight = w; }
+}
