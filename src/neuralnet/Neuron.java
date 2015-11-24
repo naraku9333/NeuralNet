@@ -12,6 +12,7 @@ import java.util.ArrayList;
  * @author Sean Vogel
  */
 public class Neuron {
+    private double value;
     /**
      * Links to neurons in next layer
      */
@@ -30,6 +31,6 @@ public class Neuron {
         backward = new ArrayList<>();
     }
     
-   // public double getWeight() { return weight; }
-    //public void setWeight(double w) { weight = w; }
+    public double getValue() { return value; }
+    public void setValue(double v) { value = v; }
 }
