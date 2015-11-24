@@ -99,8 +99,8 @@ public class NeuralNet {
                     deltaW = (desiredOutput[j] - v) * (v * (1 - v));                
                 }
                 else {
-                    for(int k = 1; k < deltas[j].length; ++k) {
-                        deltaW += deltas[j][k] * n.forward.get(k).weight;
+                    for(int k = 1; k < deltas[i].length; ++k) {
+                        deltaW += deltas[i][k] * n.forward.get(k).weight;
                     }
                     deltaW *= (v * (1 - v));
                 }
