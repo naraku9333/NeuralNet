@@ -13,6 +13,11 @@ package neuralnet;
 public class Sigmoid implements Activator {
 
     @Override
-    public double activate(double x) { 
+    public double f(double x) { 
         return 1 / (1 + Math.exp(-x)); }    
+
+    @Override
+    public double fprime(double x) {
+        return x * (1 - x);//f(x) * (1 - f(x));
+    }
 }

@@ -10,5 +10,6 @@ package neuralnet;
  * @author Sean Vogel
  */
 public interface Activator {
-    public double activate(double x);
+    public double f(double x);
+    public double fprime(double x);
 }

@@ -15,7 +15,7 @@ import java.util.Random;
 public class Link {
     static Random r = new Random();
     public Link() {        
-        weight = r.nextInt(30) / 100;//using nextInt for bound
+        weight = r.nextDouble();// - 0.5;
     }
     public double weight;
     public Neuron prev, next;

@@ -13,7 +13,12 @@ package neuralnet;
 public class Tanh implements Activator {
 
     @Override
-    public double activate(double x) {
+    public double f(double x) {
         return Math.tanh(x);
     }   
+
+    @Override
+    public double fprime(double x) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

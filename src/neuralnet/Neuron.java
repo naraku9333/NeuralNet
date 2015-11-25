@@ -13,6 +13,8 @@ import java.util.ArrayList;
  */
 public class Neuron {
     private double value;
+    private double error;
+    
     /**
      * Links to neurons in next layer
      */
@@ -33,4 +35,6 @@ public class Neuron {
     
     public double getValue() { return value; }
     public void setValue(double v) { value = v; }
+    public double getError() { return error; }
+    public void setError(double e) { error = e; }
 }

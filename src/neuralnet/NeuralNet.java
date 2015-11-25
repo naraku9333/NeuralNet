@@ -21,7 +21,7 @@ public class NeuralNet {
      */
     private final ArrayList<ArrayList<Neuron>> network;
     private Activator activator;
-    private double learningRate = 0.01;
+    private double learningRate = 0.9;
     
     /**
      * Constructor 
@@ -36,7 +36,7 @@ public class NeuralNet {
         activator = new Sigmoid();
         network = new ArrayList<>();
         for(int size : layers) {
-            ArrayList<Neuron> l = new ArrayList<>();
+            ArrayList<Neuron> l = new ArrayList<>();//new layer
             for(int i = 0; i < size; ++i) {                         
                 l.add(new Neuron());//add neurons to layer
             }
@@ -62,7 +62,7 @@ public class NeuralNet {
                     n2.backward.add(l);
                 }
             }
-        }        
+        }
     }
     
     /**
@@ -74,10 +74,10 @@ public class NeuralNet {
                 if(n.backward.isEmpty()) break;//its input layer
                 double v = 0;
                 for(Link l : n.backward) { v += l.prev.getValue() * l.weight; }
-                n.setValue(activate(v));
+                n.setValue(activator.f(v));
             }
         }
-    }
+    }        
     
     /**
      * 
@@ -87,24 +87,26 @@ public class NeuralNet {
         if(desiredOutput.length != network.get(network.size()-1).size())
             throw new IllegalArgumentException("Invalid number of outputs");
         
-        double[][] deltas = new double[network.size()][];//hold all deltas
-        for(int i = network.size()-1; i >= 0; --i) {//start at output layer
-            deltas[i] = new double[network.get(i).size()];     
-            double deltaW = 0;
+        double outputError = 0;
+        
+        //start at output layer
+        for(int i = network.size()-1; i > 0; --i) {
             for(int j = 0; j < network.get(i).size(); ++j) {
                 Neuron n = network.get(i).get(j);
-                double v = n.getValue();
                 
-                if(i == network.size()-1) {
-                    deltaW = (desiredOutput[j] - v) * (v * (1 - v));                
+                //calculate errors
+                if(i == network.size()-1) {//output neuron
+                    n.setError(activator.fprime(n.getValue()) * (desiredOutput[j] - n.getValue()));
+                    outputError += n.getError();
                 }
                 else {
-                    for(int k = 1; k < deltas[i].length; ++k) {
-                        deltaW += deltas[i][k] * n.forward.get(k).weight;
-                    }
-                    deltaW *= (v * (1 - v));
+                    double w = 0;
+                    for(Link l : n.forward) { w += l.weight * outputError; }
+                    n.setError(activator.fprime(n.getValue()) * w );
                 }
-                for(Link l : n.backward) { l.weight+=deltaW; };
+                
+                //adjust weights
+                for(Link l : n.backward) { l.weight += learningRate * n.getError() * l.prev.getValue(); }
             }
         }
     }
@@ -133,7 +135,9 @@ public class NeuralNet {
     
     public ArrayList<Double> getOutputs() {
         ArrayList<Double> a = new ArrayList<>();
-        for(Neuron n : network.get(network.size()-1)) { a.add(n.getValue()); }
+        network.get(network.size()-1).stream().forEach((n) -> {
+            a.add(n.getValue());
+        });
         
         return a;
     }
@@ -143,16 +147,10 @@ public class NeuralNet {
             input(data[i]);
             feedForward();
             backPropagate(targets[i]);
-            for(double d : getOutputs()) {
+            getOutputs().stream().forEach((d) -> {
                 System.out.print(d + " ");
-            }   
+            });             
         }
-    }
-    
-    /**
-     * Activation function
-     * @param x
-     * @return 
-     */
-    private double activate(double x) { return activator.activate(x); }//1 / (1 + Math.exp(-x)); }  
+        System.out.println();
+    }        
 }

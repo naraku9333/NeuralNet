@@ -22,4 +22,6 @@ public class NetworkTrainer {
     public NetworkTrainer(NeuralNet n) {
         network = n;
     }
+    
+    
 }

@@ -13,7 +13,12 @@ package neuralnet;
 public class ReLU implements Activator {
 
     @Override
-    public double activate(double x) {
+    public double f(double x) {
         return Math.max(0, x);
     }  
+
+    @Override
+    public double fprime(double x) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

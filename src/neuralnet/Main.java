@@ -16,15 +16,10 @@ public class Main {
     public static void main(String[] args) {
         NeuralNet net = new NeuralNet(2, 2, 1);
         
-        double[][] data = {{1,0},{0,0},{0,1},{1,1}};
-        double[][] t = {{1},{0},{1},{0}};
-        //net.input(new double[]{1, 2, 3});
-        //net.feedForward();
-        net.train(data, t);
-        //net.backPropagate(new double[]{0, 3, 1});
+        double[][] data = {{0,0},{0,1},{1,0},{1,1}};
+        double[][] t = {{0},{1},{1},{0}};
         
-//        for(double d : net.getOutputs()) {
-//            System.out.print(d + " ");
-//        }
+        for(int i = 0; i < 10000; ++i)
+            net.train(data, t);      
     }
 }
