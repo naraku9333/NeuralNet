@@ -19,6 +19,6 @@ public class Tanh implements Activator {
 
     @Override
     public double fprime(double x) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return 1 - x*x;
     }
 }

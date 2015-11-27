@@ -21,7 +21,6 @@ public class NeuralNet {
      */
     private final ArrayList<ArrayList<Neuron>> network;
     private Activator activator;
-    private double learningRate = 0.9;
     
     /**
      * Constructor 
@@ -56,8 +55,7 @@ public class NeuralNet {
         for(int i = 0; i < network.size() - 1; ++i) {//foreach layer
             for(Neuron n1 : network.get(i)) {//foreach neuron
                 for(Neuron n2 : network.get(i+1)) {
-                    Link l = new Link();
-                    l.prev = n1; l.next = n2;
+                    Link l = new Link(n1, n2);
                     n1.forward.add(l);
                     n2.backward.add(l);
                 }
@@ -77,39 +75,7 @@ public class NeuralNet {
                 n.setValue(activator.f(v));
             }
         }
-    }        
-    
-    /**
-     * 
-     * @param desiredOutput
-     */
-    public void backPropagate(double[] desiredOutput) {
-        if(desiredOutput.length != network.get(network.size()-1).size())
-            throw new IllegalArgumentException("Invalid number of outputs");
-        
-        double outputError = 0;
-        
-        //start at output layer
-        for(int i = network.size()-1; i > 0; --i) {
-            for(int j = 0; j < network.get(i).size(); ++j) {
-                Neuron n = network.get(i).get(j);
-                
-                //calculate errors
-                if(i == network.size()-1) {//output neuron
-                    n.setError(activator.fprime(n.getValue()) * (desiredOutput[j] - n.getValue()));
-                    outputError += n.getError();
-                }
-                else {
-                    double w = 0;
-                    for(Link l : n.forward) { w += l.weight * outputError; }
-                    n.setError(activator.fprime(n.getValue()) * w );
-                }
-                
-                //adjust weights
-                for(Link l : n.backward) { l.weight += learningRate * n.getError() * l.prev.getValue(); }
-            }
-        }
-    }
+    }            
     
     /**
      * Set values for input neurons
@@ -129,10 +95,24 @@ public class NeuralNet {
      * 
      * @param a 
      */
-    public void setActivator(Activator a) {
-        activator = a;
-    }
+    public void setActivator(Activator a) { activator = a; }
     
+    /**
+     * 
+     * @return 
+     */
+    public Activator getActivator() { return activator; }
+    
+    /**
+     * 
+     * @return 
+     */
+    public final ArrayList<ArrayList<Neuron>> getNetwork() { return network; }
+    
+    /**
+     * 
+     * @return 
+     */
     public ArrayList<Double> getOutputs() {
         ArrayList<Double> a = new ArrayList<>();
         network.get(network.size()-1).stream().forEach((n) -> {
@@ -142,15 +122,7 @@ public class NeuralNet {
         return a;
     }
     
-    public void train(double[][] data, double[][] targets) {
-        for(int i = 0; i < data.length; ++i) {//for each sample
-            input(data[i]);
-            feedForward();
-            backPropagate(targets[i]);
-            getOutputs().stream().forEach((d) -> {
-                System.out.print(d + " ");
-            });             
-        }
-        System.out.println();
-    }        
+    private double clamp(double x) {
+        return (x < 0.05) ? 0 : (x > 0.95) ? 1 : -1;
+    }
 }

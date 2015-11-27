@@ -19,6 +19,6 @@ public class ReLU implements Activator {
 
     @Override
     public double fprime(double x) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return (x < 0) ? 0 : 1;
     }
 }
