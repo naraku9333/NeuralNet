@@ -19,3 +19,4 @@ nbproject/build-impl.xml
 *.properties
 nbproject/private/private.xml
 nbproject/project.xml
+/dist/

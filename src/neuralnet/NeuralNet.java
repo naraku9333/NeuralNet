@@ -64,7 +64,7 @@ public class NeuralNet {
     }
     
     /**
-     * 
+     * Feed inputs forward through the network
      */
     public void feedForward() {
         for(ArrayList<Neuron> layer : network) {
@@ -81,10 +81,11 @@ public class NeuralNet {
      * Set values for input neurons
      * @param in 
      */
-    public void input(double[] in) {
+    public void input(float[] in) {
         if(in.length != network.get(0).size()) 
             throw new IllegalArgumentException("Invalid number of inputs");
         
+        //apply inputs to input layer
         ArrayList<Neuron> inputLayer = network.get(0);
         for(int i = 0; i < inputLayer.size(); ++i) {
             inputLayer.get(i).setValue(in[i]);

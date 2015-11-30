@@ -16,7 +16,7 @@ public class Link {
     private static final Random r = new Random();
     public Link(Neuron n1, Neuron n2) {  
         prev = n1; next = n2;
-        weight = r.nextDouble();// - 0.5;
+        weight = r.nextDouble() - 0.5;
     }
     public double weight;
     public Neuron prev, next;
