@@ -5,12 +5,14 @@
  */
 package neuralnet;
 
+import java.io.Serializable;
+
 /**
  * Rectified Linear Unit activation function
  * 
  * @author Sean Vogel
  */
-public class ReLU implements Activator {
+public class ReLU implements Activator, Serializable {
 
     @Override
     public double f(double x) {

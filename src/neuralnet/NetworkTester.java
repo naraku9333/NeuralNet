@@ -42,6 +42,18 @@ public class NetworkTester {
     
     /**
      * 
+     * @param data 
+     * @return  
+     */
+    public int test(float[] data) {         
+        network.input(data);
+        network.feedForward();
+        ArrayList<Double> out = network.getOutputs();            
+        return out.indexOf(Collections.max(out)) + 1;                                  
+    }    
+    
+    /**
+     * 
      * @param x
      * @return 
      */

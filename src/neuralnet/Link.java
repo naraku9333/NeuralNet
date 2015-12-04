@@ -5,6 +5,7 @@
  */
 package neuralnet;
 
+import java.io.Serializable;
 import java.util.Random;
 
 /**
@@ -12,11 +13,11 @@ import java.util.Random;
  * 
  * @author Sean Vogel
  */
-public class Link {
+public class Link implements Serializable {
     private static final Random r = new Random();
     public Link(Neuron n1, Neuron n2) {  
         prev = n1; next = n2;
-        weight = r.nextDouble() - 0.5;
+        weight = r.nextDouble() - 0.51;
     }
     public double weight;
     public Neuron prev, next;

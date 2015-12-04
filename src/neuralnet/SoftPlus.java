@@ -5,12 +5,14 @@
  */
 package neuralnet;
 
+import java.io.Serializable;
+
 /**
  * SoftPlus activation function
  * 
  * @author Sean Vogel
  */
-public class SoftPlus implements Activator {
+public class SoftPlus implements Activator, Serializable {
 
     @Override
     public double f(double x) {

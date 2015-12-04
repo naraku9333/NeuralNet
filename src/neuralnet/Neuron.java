@@ -5,13 +5,14 @@
  */
 package neuralnet;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  *
  * @author Sean Vogel
  */
-public class Neuron {
+public class Neuron implements Serializable {
     private double value;
     private double error;
     

@@ -5,12 +5,14 @@
  */
 package neuralnet;
 
+import java.io.Serializable;
+
 /**
  * Sigmoidal (logistic) activation function
  * 
  * @author Sean Vogel
  */
-public class Sigmoid implements Activator {
+public class Sigmoid implements Activator, Serializable {
 
     @Override
     public double f(double x) { 

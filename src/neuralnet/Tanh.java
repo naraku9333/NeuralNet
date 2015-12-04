@@ -5,12 +5,14 @@
  */
 package neuralnet;
 
+import java.io.Serializable;
+
 /**
  * Hyperbolic Tangent activation function
  * 
  * @author Sean Vogel
  */
-public class Tanh implements Activator {
+public class Tanh implements Activator, Serializable {
 
     @Override
     public double f(double x) {

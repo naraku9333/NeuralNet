@@ -5,6 +5,7 @@
  */
 package neuralnet;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -13,14 +14,16 @@ import java.util.ArrayList;
  * 
  * @todo Add bias
  */
-public class NeuralNet {
+public class NeuralNet implements Serializable {
 
     /**
      * First dimension are the network layers
      * Second dimension are the neurons of the layers 
      */
+    //private final ArrayList<ArrayList<Neuron>> network;
     private final ArrayList<ArrayList<Neuron>> network;
     private Activator activator;
+    private int numLayers;
     
     /**
      * Constructor 
@@ -32,6 +35,7 @@ public class NeuralNet {
      * @param layers 
      */
     public NeuralNet(int... layers) {
+        numLayers = layers.length;
         activator = new Sigmoid();
         network = new ArrayList<>();
         for(int size : layers) {
@@ -52,7 +56,7 @@ public class NeuralNet {
      *  | \| <-- |__ --> | \|
      */
     private void createLinks() {
-        for(int i = 0; i < network.size() - 1; ++i) {//foreach layer
+        for(int i = 0; i < numLayers - 1; ++i) {//foreach layer
             for(Neuron n1 : network.get(i)) {//foreach neuron
                 for(Neuron n2 : network.get(i+1)) {
                     Link l = new Link(n1, n2);
@@ -85,6 +89,7 @@ public class NeuralNet {
         if(in.length != network.get(0).size()) 
             throw new IllegalArgumentException("Invalid number of inputs");
         
+        //normalize(in);
         //apply inputs to input layer
         ArrayList<Neuron> inputLayer = network.get(0);
         for(int i = 0; i < inputLayer.size(); ++i) {
@@ -115,7 +120,7 @@ public class NeuralNet {
      * @return 
      */
     public ArrayList<Double> getOutputs() {
-        ArrayList<Double> a = new ArrayList<>();
+        ArrayList<Double> a = new ArrayList<>();        
         network.get(network.size()-1).stream().forEach((n) -> {
             a.add(n.getValue());
         });
@@ -125,5 +130,19 @@ public class NeuralNet {
     
     private double clamp(double x) {
         return (x < 0.05) ? 0 : (x > 0.95) ? 1 : -1;
+    }
+    
+    private void normalize(float[] in) {
+        double mean = 0;
+        double sum_x = 0, sum_x2 = 0;
+        
+        for(double d : in) {             
+            sum_x += d;
+            sum_x2 += d*d;
+        }
+        mean = sum_x / in.length;//get mean
+        double stddev = (1/(in.length-1)) * (sum_x2 - ((1/in.length) * (sum_x * sum_x)));
+        stddev = Math.sqrt(stddev);
+        for(int i = 0; i < in.length; ++i) { in[i] -= mean; in[i] /= stddev; }
     }
 }

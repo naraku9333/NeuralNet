@@ -42,9 +42,7 @@ public class NetworkTrainer {
      * @param desiredOutput
      */
     private void backPropagate(int[] desiredOutput) {
-        ArrayList<ArrayList<Neuron>> neuronList = network.getNetwork();
-        if(desiredOutput.length != neuronList.get(neuronList.size()-1).size())
-            throw new IllegalArgumentException("Invalid number of outputs");
+        ArrayList<ArrayList<Neuron>> neuronList = network.getNetwork();        
                 
         //start at output layer
         for(int i = neuronList.size()-1; i >= 0; --i) {
@@ -69,32 +67,38 @@ public class NetworkTrainer {
         }
     }    
     
-//    private void backPropagate(double[] desiredOutput) {
-//        ArrayList<ArrayList<Neuron>> neuronList = network.getNetwork();
-//        if(desiredOutput.length != neuronList.get(neuronList.size()-1).size())
-//            throw new IllegalArgumentException("Invalid number of outputs");
-//        
-//        double outputError = 0;
-//        
-//        //start at output layer
-//        int i = neuronList.size()-1;
-//        for(int j = 0; j < neuronList.get(i).size(); ++j){
-//            Neuron n = neuronList.get(i).get(j);
-//            n.setError(network.getActivator().fprime(n.getValue()) * (desiredOutput[j] - n.getValue()));
-//            feedBackward(n, n.getError());
-//        }
-//    }    
-//    
-//    private void feedBackward(Neuron n, double error) {
-//        double e = n.getError();
-//        if(n.backward.isEmpty()) { return; }
-//        else {
-//            for(Link l : n.backward) { 
-//                l.weight += learningRate * /*n.getError()*/e * l.prev.getValue();
-//                feedBackward(l.prev, e);
-//            }
-//        }
-//    }
+    /**
+     * 
+     * @param desiredOutput
+     */
+    private void backPropagate(int desiredOutput) {
+        ArrayList<ArrayList<Neuron>> neuronList = network.getNetwork();       
+                
+        int[] desout = new int[neuronList.get(neuronList.size()-1).size()];
+        for(int i = 0; i < desout.length; ++i) desout[i] = 0;
+        desout[desiredOutput-1] = 1;
+        //start at output layer
+        for(int i = neuronList.size()-1; i >= 0; --i) {
+            for(int j = 0; j < neuronList.get(i).size(); ++j) {
+                Neuron n = neuronList.get(i).get(j);
+                
+                //calculate errors
+                if(i == neuronList.size()-1) {//output neuron
+                    n.setError(network.getActivator().fprime(n.getValue()) * (desout[j] - n.getValue()));
+                    //outputError += n.getError();
+                }
+                else {
+                    double w = 0;
+                    for(Link l : n.forward) { w += l.weight * l.next.getError(); }
+                    n.setError(network.getActivator().fprime(n.getValue()) * w );
+                    //for(Link l : n.backward) { l.weight += learningRate * n.getError() * l.prev.getValue(); }
+                }
+                
+                //adjust weights
+                for(Link l : n.backward) { l.weight += learningRate * n.getError() * l.prev.getValue(); }
+            }
+        }
+    }        
     
     /**
      * 
@@ -118,7 +122,7 @@ public class NetworkTrainer {
         for(int i = 0; i < data.length; ++i) {//for each sample
             network.input(data[i]);
             network.feedForward();
-            backPropagate(targets);
+            backPropagate(targets[i]);
         }   
     }    
     
